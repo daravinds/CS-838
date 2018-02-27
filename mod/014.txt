@@ -11,7 +11,7 @@ NUJ official Barry Fitzpatrick said the company had ignored the 90-day consultat
 The two Telegraph titles currently employ 521 journalists . 
 Some broadsheet newspapers - especially those which have not moved to a tabloid format - have suffered circulation declines , which are hitting revenues . 
 The Telegraph has announced no plans to go tabloid although both The Independent and The Times have seen circulation rise since shrinking in size . 
-The Guardian is hedging its bets , planning a larger tabloid format like those popular in continental Europe</LOCATION> . 
+The Guardian is hedging its bets , planning a larger tabloid format like those popular in continental <LOCATION>Europe</LOCATION> . 
 The Telegraph Group was bought by the Barclay twins - Frederick and David - last year , having previously been owned by Lord Conrad Black 's Hollinger International . 
 The brothers are currently mulling the sale of another of their businesses , retailer Littlewoods . 
 Telegraph executive Murdoch MacLennan said the two newspapers would add eight colour pages in the coming months . 

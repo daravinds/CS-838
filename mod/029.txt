@@ -1,8 +1,8 @@
-UK</LOCATION> firm faces Venezuelan land row Venezuelan authorities have said they will seize land owned by a British company as part of President Chavez 's agrarian reform programme . 
-Officials in Cojedes</LOCATION> state said on Friday that farmland owned by a subsidiary of the Vestey Group would be taken and used to settle poor farmers . 
+<LOCATION>UK</LOCATION> firm faces Venezuelan land row Venezuelan authorities have said they will seize land owned by a British company as part of President Chavez 's agrarian reform programme . 
+Officials in <LOCATION>Cojedes</LOCATION> state said on Friday that farmland owned by a subsidiary of the Vestey Group would be taken and used to settle poor farmers . 
 The government is cracking down on so-called latifundios , or large rural estates , which it says are lying idle . 
 The Vestey Group said it had not been informed of any planned seizure . 
-The firm , whose Agroflora subsidiary operates 13 farms in Venezuela</LOCATION> , insisted that it had complied fully with Venezuelan law . 
+The firm , whose Agroflora subsidiary operates 13 farms in <LOCATION>Venezuela</LOCATION> , insisted that it had complied fully with Venezuelan law . 
 Prosecutors in the south of the country have targeted Hato El Charcote , a beef cattle ranch owned by Agroflora . 
 According to Reuters , they plan to seize 12,900 acres -LRB- 5,200 hectares -RRB- from the 32,000 acre -LRB- 13,000 hectare -RRB- farm . 
 Officials claim that Agroflora does not possess valid documents proving its ownership of the land in question . 

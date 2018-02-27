@@ -14,8 +14,8 @@ Poor training frustrates both call centre workers and customers .
 As a result , call centres have a high `` churn rate '' , with nearly a quarter of workers throwing in the towel every year , which in turn forces companies to pay for training new staff . 
 Resolution rates - the number of calls where a customer 's query is resolved to mutual satisfaction - are running at just 50 % . 
 When the query is passed on to a second or third person - a specialist or manager - rates rise to about 70 % , but that is still well below the industry target of an 85 % resolution rate . 
-Suggestions that `` outsourcing '' - relocating call centres to low-cost countries like India</LOCATION> or South</LOCATION> Africa</LOCATION> - is to blame are wrong , Ms Diemont says . 
-There are `` no big differences in wait time and call resolution '' between call centres based in Europe</LOCATION> or North</LOCATION> America</LOCATION> and those in developing countries around the world . 
+Suggestions that `` outsourcing '' - relocating call centres to low-cost countries like <LOCATION>India</LOCATION> or <LOCATION>South Africa</LOCATION> - is to blame are wrong , Ms Diemont says . 
+There are `` no big differences in wait time and call resolution '' between call centres based in <LOCATION>Europe</LOCATION> or <LOCATION>North America</LOCATION> and those in developing countries around the world . 
 `` You can make call centres perform anywhere if you have good management and the right processes in place , '' she says . 
 However , companies that decide to `` offshore '' their operations are driven not just by cost considerations . 
 Only 42 % of them say that saving money is the main consideration when closing domestic call centre operations . 

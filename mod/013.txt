@@ -1,7 +1,7 @@
 Peugeot deal boosts Mitsubishi Struggling Japanese car maker Mitsubishi Motors has struck a deal to supply French car maker Peugeot with 30,000 sports utility vehicles -LRB- SUV -RRB- . 
 The two firms signed a Memorandum of Understanding , and say they expect to seal a final agreement by Spring 2005 . 
 The alliance comes as a badly-needed boost for loss-making Mitsubishi , after several profit warnings and poor sales . 
-The SUVs will be built in Japan</LOCATION> using Peugeot 's diesel engines and sold mainly in the European market . 
+The SUVs will be built in <LOCATION>Japan</LOCATION> using Peugeot 's diesel engines and sold mainly in the European market . 
 Falling sales have left Mitsubishi Motors with underused capacity , and the production deal with Peugeot gives it a chance to utilise some of it . 
 In January , Mitsubishi Motors issued its third profits warning in nine months , and cut its sales forecasts for the year to March 2005 . 
 Its sales have slid 41 % in the past year , catalysed by the revelation that the company had systematically been hiding records of faults and then secretly repairing vehicles . 
@@ -10,5 +10,5 @@ Last month it said it was looking for a further 540bn yen -LRB- $ 5.2 bn ; # 2.7
 US-German carmaker DaimlerChrylser , a 30 % shareholder in Mitsubishi Motors , decided in April 2004 not to pump in any more money . 
 The deal with Peugeot was celebrated by Mitsubishi 's newly-appointed chief executive Takashi Nishioka , who took over after three top bosses stood down last month to shoulder responsibility for the firm 's troubles . 
 Mitsubishi Motors has forecast a net loss of 472bn yen in its current financial year to March 2005 . 
-Last month , it signed a production agreement with Japanese rival Nissan Motor to supply it with 36,000 small cars for sale in Japan</LOCATION> . 
+Last month , it signed a production agreement with Japanese rival Nissan Motor to supply it with 36,000 small cars for sale in <LOCATION>Japan</LOCATION> . 
 It has been making cars for Nissan since 2003 . 
