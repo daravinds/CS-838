@@ -43,11 +43,11 @@ def is_noun(word):
 
 
 def is_location(word):
-    return 1 if "#L" in word else 0
+    return 1 if "/LOCATION" in word else 0
 
 
 def process_word(word):
-    return word.replace("#L", "")
+    return word.replace("/LOCATION", "")
 
 
 def get_feature_vector(rows):
@@ -75,10 +75,17 @@ def trainiing(rows, labels, v_rows, v_labels):
     from sklearn.ensemble import RandomForestClassifier
     mean_scores = {}
     clf1 = RandomForestClassifier()
+    # for row in rows:
+    #     print row
+    # for label in labels:
+    #     print label
     clf1 = clf1.fit(rows, labels)
     scores = cross_val_score(clf1, rows, labels)
     predicted_labels = clf1.predict(v_rows)
 
+    # print "#" * 100
+    # for predicted_label in predicted_labels:
+    #     print predicted_label
     correct=0
     for i in range(len(predicted_labels)):
         if v_labels[i] == predicted_labels[i]:
@@ -111,6 +118,10 @@ def trainiing(rows, labels, v_rows, v_labels):
     # scores = cross_val_score(clf5, training_set, training_set_labels)
     # mean_scores["svm"] = scores.mean()
 
+def is_invalid(word):
+    invalid_list = [".", ",", ". ", "'", ""]
+    return word in invalid_list
+
 """
 Millions of people were left homeless in Indonesia#L Aceh#L 's region following the earthquake and tsunami disaster in late December .
 """
@@ -140,9 +151,20 @@ def main():
             s = f.read()
         lines = s.split("\n")
         for line in lines:
-            for word in line.split(" "):
+            words = line.split(" ")
+            for word in words:
+                if is_invalid(word):
+                    continue
+
                 row = [word, line]
                 rows.append(row)
+
+            # for i in range(len(words)-1):
+            #     word = words[i]
+            #     if is_invalid(word):
+            #         continue
+            #     row = [word + " " + words[i+1], line]
+            #     rows.append(row)
 
     validation_rows = []
     for fname in files[400:]:
@@ -153,17 +175,28 @@ def main():
             s = f.read()
         lines = s.split("\n")
         for line in lines:
-            for word in line.split(" "):
+            words = line.split(" ")
+            for word in words:
+                if is_invalid(word):
+                    continue
+
                 row = [word, line]
                 validation_rows.append(row)
 
+            # for i in range(len(words)-1):
+            #     word = words[i]
+            #     if is_invalid(word):
+            #         continue
+            #     row = [word + " " + words[i+1], line]
+            #     validation_rows.append(row)
     # for row in rows:
     #     print row
     feature_vector, labels = get_feature_vector(rows)
+    print "#####" + str(labels.count(1))
     validation_feature_vector, validation_labels = get_feature_vector(validation_rows)
-
-    print len(feature_vector)
-    print "training"
+    #
+    # print len(feature_vector)
+    # print "training"
     trainiing(feature_vector, labels, validation_feature_vector, validation_labels)
     # for v in feature_vector:
     #     print v
