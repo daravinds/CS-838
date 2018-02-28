@@ -21,13 +21,13 @@ def get_next_word(word, line):
 
 
 def is_all_caps(word):
-    return 1 if word.isupper else 0
+    return 1 if word.isupper() else 0
 
 
 def is_first_char_capitalised(word):
     words = word.split(" ")
     for w in words:
-        if w[0].islower():
+        if w[0].islower() or (not re.match("^[a-zA-Z]*$", word)):
             return 0
 
     return 1
@@ -76,14 +76,23 @@ def contains_suffix(word):
         return 0
     suffixes = ('land', 'berg', 'burg', 'shire', 'cester')
 
+    # if word.endswith(suffixes):
+    #     print "$"*100
+    #     print word
+
     return 1 if word.endswith(suffixes) else 0
 
 
 def is_noun(word):
     if len(word) <= 0: return 0
     tag = nltk.pos_tag([word])
-    return 1 if tag[0][1] == 'NNP' or tag[0][1] == 'NN' else 0
+    # return 1 if tag[0][1] == 'NNP' or tag[0][1] == 'NN' else 0
 
+    # if tag[0][1] == 'NNP':
+    #     print "$"*100
+    #     print word
+
+    return 1 if tag[0][1] == 'NNP' else 0
 
 def is_location(word):
     result = re.search('^<LOCATION>(.*)</LOCATION>$', word)
@@ -104,17 +113,32 @@ def get_feature_vector(rows):
         cur_vector = feature_vector[i]
 
         # cur_vector[0] = word
+        # cur_vector[1] = word_context
         cur_vector[0] = is_first_char_capitalised(word)
-        # cur_vector.append(is_first_char_capitalised(word))
+        cur_vector.append(is_first_char_capitalised(word))
         cur_vector.append(has_keywords_before(word, word_context))
         cur_vector.append(has_keywords_after(word, word_context))
         cur_vector.append(is_noun(word))
         cur_vector.append(contains_suffix(word))
         cur_vector.append(previous_word_direction(word, word_context))
         cur_vector.append(is_all_caps(word))
+        # cur_vector.append(rows[i][2])
 
     return feature_vector
 
+
+def print_correct_labels(predicted, correct, data):
+    print "Correct Labels"
+    for i in range(len(predicted)):
+        if correct[i] == predicted[i] and correct[i]==1:
+            print data[i][0]
+
+
+def print_false_positive(predicted, correct, data):
+    print "False positive"
+    for i in range(len(predicted)):
+        if predicted[i] == 1 and correct[i] != 1:
+            print data[i][0]
 
 def trainiing(rows, labels, v_rows, v_labels, data):
     mean_scores = {}
@@ -132,52 +156,67 @@ def trainiing(rows, labels, v_rows, v_labels, data):
     #     print predicted_label
 
     print "###"*100
-    correct=0
-    for i in range(len(predicted_labels)):
-
-        if v_labels[i] == predicted_labels[i] and v_labels[i]==1:
-            print data[i][0]
-            correct+=1
-
     import collections
-    print collections.Counter(predicted_labels)
     print collections.Counter(v_labels)
-    print len(predicted_labels)
+    correct=0
+
+    print "Random forest"
+    print_correct_labels(predicted_labels, v_labels, data)
+    print_false_positive(predicted_labels, v_labels, data)
+
+    print collections.Counter(predicted_labels)
+
     # pdb.set_trace()
     mean_scores["random-forest"] = scores.mean()
 
-
+    print "-" * 100
+    
     from sklearn import tree
     clf2 = tree.DecisionTreeClassifier()
     clf2 = clf2.fit(rows, labels)
     scores = cross_val_score(clf2, rows, labels)
     mean_scores["decision-trees"] = scores.mean()
-    predicted_labels = clf1.predict(v_rows)
-    for i in range(len(predicted_labels)):
-
-        if v_labels[i] == predicted_labels[i] and v_labels[i]==1:
-            print data[i][0]
-            correct+=1
+    predicted_labels = clf2.predict(v_rows)
+    print "Decision Tree"
+    print_correct_labels(predicted_labels, v_labels, data)
+    print_false_positive(predicted_labels, v_labels, data)
     print collections.Counter(predicted_labels)
-    print collections.Counter(v_labels)
-    print len(predicted_labels)
-    #
-    # from sklearn import linear_model
-    # clf3 = linear_model.LinearRegression()
-    # clf3 = clf3.fit(training_set, training_set_labels)
-    # scores = cross_val_score(clf3, training_set, training_set_labels)
-    # mean_scores["linear-regression"] = scores.mean()
-    #
-    # clf4 = linear_model.LogisticRegression()
-    # clf4 = clf4.fit(training_set, training_set_labels)
-    # scores = cross_val_score(clf4, training_set, training_set_labels)
-    # mean_scores["logistic-regression"] = scores.mean()
-    #
-    # from sklearn import svm
-    # clf5 = svm.SVC()
-    # clf5 = clf5.fit(training_set, training_set_labels)
-    # scores = cross_val_score(clf5, training_set, training_set_labels)
-    # mean_scores["svm"] = scores.mean()
+
+    print "-" * 100
+    from sklearn import linear_model
+    clf3 = linear_model.LinearRegression()
+    clf3 = clf3.fit(rows, labels)
+    scores = cross_val_score(clf3, rows, labels)
+    mean_scores["linear-regression"] = scores.mean()
+    predicted_labels = clf3.predict(v_rows)
+    print "Linear model"
+    print_correct_labels(predicted_labels, v_labels, data)
+    print_false_positive(predicted_labels, v_labels, data)
+    print collections.Counter(predicted_labels)
+
+    print "-" * 100
+    clf4 = linear_model.LogisticRegression()
+    clf4 = clf4.fit(rows, labels)
+    scores = cross_val_score(clf4, rows, labels)
+    mean_scores["logistic-regression"] = scores.mean()
+    predicted_labels = clf4.predict(v_rows)
+    print "Random forest"
+    print_correct_labels(predicted_labels, v_labels, data)
+    print_false_positive(predicted_labels, v_labels, data)
+    print collections.Counter(predicted_labels)
+
+    print "-" * 100
+
+    from sklearn import svm
+    clf5 = svm.SVC()
+    clf5 = clf5.fit(rows, labels)
+    scores = cross_val_score(clf5, rows, labels)
+    mean_scores["svm"] = scores.mean()
+    predicted_labels = clf5.predict(v_rows)
+    print "SVM"
+    print_correct_labels(predicted_labels, v_labels, data)
+    print_false_positive(predicted_labels, v_labels, data)
+    print collections.Counter(predicted_labels)
 
 
 def is_invalid(word):
@@ -189,8 +228,6 @@ def get_row_and_label(word, line):
     # processed_word = word
     label = 0
     if is_location(word):
-        print "$$$" + word
-
         # processed_word = process_word(word)
         #line = line.replace(word, processed_word)
         label = 1
@@ -230,7 +267,7 @@ def get_rows_and_labels(files):
                     next_word = words[i+1]
                     if is_invalid(next_word):
                         continue
-                    row, label = get_row_and_label(word + " " + next_word , line)
+                    row, label = get_row_and_label(word + " " + next_word, line)
                     rows.append(row)
                     labels.append(label)
 
@@ -245,27 +282,28 @@ def main():
     # f = []
     train_rows, train_labels = get_rows_and_labels(files[:40])
 
+
     # for row in train_rows:
-    #     print row
+    #     print row[0]
 
     validation_rows, validation_labels = get_rows_and_labels(files[40:51])
 
-    # for row in train_rows:
-    #     print row
 
     feature_vector = get_feature_vector(train_rows)
+    # for vector in feature_vector:
+    #     print vector
     # print "#####" + str(labels.count(1))
     validation_feature_vector = get_feature_vector(validation_rows)
     #
-    print "############# training rows"
-    for i in range(len(train_rows)):
-        if train_labels[i] == 1:
-            print train_rows[i][0] + "#######" + train_rows[i][1]
-
-    print "#############validation rows"
-    for i in range(len(validation_rows)):
-        if validation_labels[i] == 1:
-            print validation_rows[i][0]
+    # print "############# training rows"
+    # for i in range(len(train_rows)):
+    #     if train_labels[i] == 1:
+    #         print train_rows[i][0] + "#######" + train_rows[i][1]
+    #
+    # print "#############validation rows"
+    # for i in range(len(validation_rows)):
+    #     if validation_labels[i] == 1:
+    #         print validation_rows[i][0]
 
     # print len(feature_vector)
     # print "training"
