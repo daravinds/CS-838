@@ -6,6 +6,7 @@ import re
 import os
 
 
+
 def get_previous_word(word, line):
     index = line.index(word)
     if index == 0:
@@ -13,6 +14,11 @@ def get_previous_word(word, line):
 
     words_before = line[:index-1].split(" ")
     return words_before[-1]
+
+
+def get_location_in_line(word, line):
+    words = line.split(" ")
+    return line.index(word)
 
 
 def get_next_word(word, line):
@@ -31,6 +37,10 @@ def is_first_char_capitalised(word):
             return 0
 
     return 1
+
+
+def is_first_word_word(word, line):
+    return get_location_in_line(word, line) == 0
 
 
 def previous_word_direction(word, word_context):
@@ -58,7 +68,7 @@ def has_keywords_before(word, word_context):
 
 
 def has_keywords_after(word, word_context):
-    keywords = ["region", "square", "country", "city", "town", "county", "creek", "avenue", "court", "block", "street", "block", "drive",
+    keywords = ["'s", "based", "region", "square", "country", "city", "town", "county", "creek", "avenue", "court", "block", "street", "block", "drive",
                 "centre", "center", "ramp", "exit", "boulevard"]
     next_word = get_next_word(word, word_context)
 
@@ -82,6 +92,27 @@ def contains_suffix(word):
 
     return 1 if word.endswith(suffixes) else 0
 
+
+def get_pos_class(word):
+    pos_nominal_value_map = {
+        ',': 1,
+        '.': 1,
+        'CC': 1,
+        'IN': 2,
+        'POS': 2,
+        'NN': 3,
+        'NNP': 3,
+        'VB': 4,
+        'VBD': 4,
+        'VBG': 4,
+        'VBN': 4,
+        'VBP': 4,
+        'VBZ': 4
+    }
+    if not word:
+        return 0
+    tag = nltk.pos_tag([word])
+    return pos_nominal_value_map.get(tag[0][1], 0)
 
 def is_noun(word):
     if len(word) <= 0: return 0
@@ -122,6 +153,33 @@ def get_feature_vector(rows):
         cur_vector.append(contains_suffix(word))
         cur_vector.append(previous_word_direction(word, word_context))
         cur_vector.append(is_all_caps(word))
+        cur_vector.append(get_location_in_line(word, word_context))
+        cur_vector.append(is_first_word_word(word, word_context))
+        next_word = get_next_word(word, word_context)
+        if next_word:
+            cur_vector.append(get_pos_class(next_word))
+            next_next_word = get_next_word(next_word, word_context)
+            if next_next_word:
+                cur_vector.append(get_pos_class(next_next_word))
+            else:
+                cur_vector.append(0)
+        else:
+            cur_vector.append(0)
+            cur_vector.append(0)
+
+        previous_word = get_previous_word(word, word_context)
+        if previous_word:
+            cur_vector.append(get_pos_class(previous_word))
+            previous_previous_word = get_previous_word(previous_word, word_context)
+            if previous_previous_word:
+                cur_vector.append(get_pos_class(previous_previous_word))
+            else:
+                cur_vector.append(0)
+        else:
+            cur_vector.append(0)
+            cur_vector.append(0)
+
+
         # cur_vector.append(rows[i][2])
 
     return feature_vector
@@ -129,16 +187,28 @@ def get_feature_vector(rows):
 
 def print_correct_labels(predicted, correct, data):
     print "Correct Labels"
+    count =0
     for i in range(len(predicted)):
         if correct[i] == predicted[i] and correct[i]==1:
             print data[i][0]
+            count +=1
+    print count
 
 
 def print_false_positive(predicted, correct, data):
+    print "\n"
     print "False positive"
     for i in range(len(predicted)):
         if predicted[i] == 1 and correct[i] != 1:
             print data[i][0]
+
+def print_true_negative(predicted, correct, data):
+    print "\n"
+    print "true negative"
+    for i in range(len(predicted)):
+        if predicted[i] == 0 and correct[i] == 1:
+            print data[i][0] + "#######" + data[i][1]
+
 
 def trainiing(rows, labels, v_rows, v_labels, data):
     mean_scores = {}
@@ -163,7 +233,7 @@ def trainiing(rows, labels, v_rows, v_labels, data):
     print "Random forest"
     print_correct_labels(predicted_labels, v_labels, data)
     print_false_positive(predicted_labels, v_labels, data)
-
+    print_true_negative(predicted_labels, v_labels, data)
     print collections.Counter(predicted_labels)
 
     # pdb.set_trace()
@@ -180,19 +250,21 @@ def trainiing(rows, labels, v_rows, v_labels, data):
     print "Decision Tree"
     print_correct_labels(predicted_labels, v_labels, data)
     print_false_positive(predicted_labels, v_labels, data)
+    print_true_negative(predicted_labels, v_labels, data)
     print collections.Counter(predicted_labels)
 
-    print "-" * 100
+    # print "-" * 100
     from sklearn import linear_model
-    clf3 = linear_model.LinearRegression()
-    clf3 = clf3.fit(rows, labels)
-    scores = cross_val_score(clf3, rows, labels)
-    mean_scores["linear-regression"] = scores.mean()
-    predicted_labels = clf3.predict(v_rows)
-    print "Linear model"
-    print_correct_labels(predicted_labels, v_labels, data)
-    print_false_positive(predicted_labels, v_labels, data)
-    print collections.Counter(predicted_labels)
+    # clf3 = linear_model.LinearRegression()
+    # clf3 = clf3.fit(rows, labels)
+    # scores = cross_val_score(clf3, rows, labels)
+    # mean_scores["linear-regression"] = scores.mean()
+    # predicted_labels = clf3.predict(v_rows)
+    # print "Linear model"
+    # print_correct_labels(predicted_labels, v_labels, data)
+    # print_false_positive(predicted_labels, v_labels, data)
+    # print_true_negative(predicted_labels, v_labels, data)
+    # print collections.Counter(predicted_labels)
 
     print "-" * 100
     clf4 = linear_model.LogisticRegression()
@@ -200,23 +272,25 @@ def trainiing(rows, labels, v_rows, v_labels, data):
     scores = cross_val_score(clf4, rows, labels)
     mean_scores["logistic-regression"] = scores.mean()
     predicted_labels = clf4.predict(v_rows)
-    print "Random forest"
+    print "Logistic Regression"
     print_correct_labels(predicted_labels, v_labels, data)
     print_false_positive(predicted_labels, v_labels, data)
+    print_true_negative(predicted_labels, v_labels, data)
     print collections.Counter(predicted_labels)
 
     print "-" * 100
 
-    from sklearn import svm
-    clf5 = svm.SVC()
-    clf5 = clf5.fit(rows, labels)
-    scores = cross_val_score(clf5, rows, labels)
-    mean_scores["svm"] = scores.mean()
-    predicted_labels = clf5.predict(v_rows)
-    print "SVM"
-    print_correct_labels(predicted_labels, v_labels, data)
-    print_false_positive(predicted_labels, v_labels, data)
-    print collections.Counter(predicted_labels)
+    # from sklearn import svm
+    # clf5 = svm.SVC()
+    # clf5 = clf5.fit(rows, labels)
+    # scores = cross_val_score(clf5, rows, labels)
+    # mean_scores["svm"] = scores.mean()
+    # predicted_labels = clf5.predict(v_rows)
+    # print "SVM"
+    # print_correct_labels(predicted_labels, v_labels, data)
+    # print_false_positive(predicted_labels, v_labels, data)
+    # print_true_negative(predicted_labels, v_labels, data)
+    # print collections.Counter(predicted_labels)
 
 
 def is_invalid(word):
@@ -280,15 +354,13 @@ Millions of people were left homeless in Indonesia#L Aceh#L 's region following 
 def main():
     files = os.listdir("./mod/")
     # f = []
-    train_rows, train_labels = get_rows_and_labels(files[:40])
+    train_rows, train_labels = get_rows_and_labels(files[:85])
 
 
     # for row in train_rows:
-    #     print row[0]
+    #     print row[0] + "#######" + get_next_word(row[0], row[1]) + "############" + row[1]
 
-    validation_rows, validation_labels = get_rows_and_labels(files[40:51])
-
-
+    validation_rows, validation_labels = get_rows_and_labels(files[85:97])
     feature_vector = get_feature_vector(train_rows)
     # for vector in feature_vector:
     #     print vector
@@ -303,7 +375,7 @@ def main():
     # print "#############validation rows"
     # for i in range(len(validation_rows)):
     #     if validation_labels[i] == 1:
-    #         print validation_rows[i][0]
+    #         print validation_rows[i][0] + "#####################" + validation_rows[i][1]
 
     # print len(feature_vector)
     # print "training"
