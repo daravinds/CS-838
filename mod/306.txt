@@ -1,4 +1,4 @@
-Retail sales show festive fervour UK</LOCATION> retail sales were better than expected in November as Christmas shoppers began their seasonal flock to the High Street , figures show . 
+Retail sales show festive fervour <LOCATION>UK</LOCATION> retail sales were better than expected in November as Christmas shoppers began their seasonal flock to the High Street , figures show . 
 The Office for National Statistics -LRB- ONS -RRB- said retail sales rose 0.6 % on the month and 6.1 % on the year . 
 But the figures , along with this week 's inflation report , could trigger another interest rate rise in the New Year . 
 However , recent data from the British Retail Consortium showed a 0.2 % slip in High Street sales during November . 
