@@ -9,5 +9,5 @@ The faulty component does not represent a safety risk but causes the motor to st
 When asked if BMW would be seeking compensation from Bosch , the carmaker 's chief executive Helmut Panke said : `` we will first solve the problem before talking about who will pay '' . 
 Audi and Mercedes Benz were also supplied with the defective diesel fuel-injection pumps but neither of them have to recall any vehicles . 
 A spokesman for DaimlerChrysler , parent company of Mercedes Benz , said it will however have to halt some production . 
-It is to close the Mercedes factory in Sindelfingen</LOCATION> on Monday and Tuesday . 
+It is to close the Mercedes factory in <LOCATION>Sindelfingen</LOCATION> on Monday and Tuesday . 
 Audi said it had been hit by production bottlenecks , due to a shortage of unaffected Bosch parts . 

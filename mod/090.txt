@@ -6,7 +6,7 @@ The package was announced by agriculture minister Dominique Bussereau after talk
 The bulk of the money - about 40m euros - will be offered in the form of preferential loans to heavily indebted producers to enable them to reschedule their payments . 
 A further 15m euros will be made available to wine cooperatives , which make up the majority of French producers , in low interest loans . 
 Efforts to promote French wine abroad are to be boosted by an extra 3.5 m euros in funding . 
-France</LOCATION> fell behind the ` New World ' producers of Australia</LOCATION> , Chile</LOCATION> and the United</LOCATION> States</LOCATION> for the first time in 2003 in terms of exports . 
+<LOCATION>France</LOCATION> fell behind the ` New World ' producers of <LOCATION>Australia</LOCATION> , <LOCATION>Chile</LOCATION> and the <LOCATION>United States</LOCATION> for the first time in 2003 in terms of exports . 
 Domestic consumption , accounting for 70 % of sales , has suffered from strict restrictions on advertising and tough drink-driving laws . 
 The aid package would `` create a positive climate around French viticulture , '' Mr Bussereau said . 
 However , wine makers and farmers said the support was much less than they had been hoping for . 
@@ -15,4 +15,4 @@ In an effort to tackle overcapacity , the government will agree that vines can b
 The government will also seek European Union approval to distil about 250 million litres of excess wine into alcohol , with vintners receiving compensation . 
 Production is currently outstripping demand by about 30 % . 
 The support is designed to make French producers more competitive in the face of increasing global consolidation across the wine industry . 
-Wine makers in France</LOCATION> 's best-known regions , such as Burgundy</LOCATION> , have found it hard to invest in new technology and to create recognisable brands to appeal to overseas buyers . 
+Wine makers in <LOCATION>France</LOCATION> 's best-known regions , such as <LOCATION>Burgundy</LOCATION> , have found it hard to invest in new technology and to create recognisable brands to appeal to overseas buyers . 
