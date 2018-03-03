@@ -1,4 +1,4 @@
-Train strike grips Buenos</LOCATION> Aires</LOCATION> A strike on the Buenos</LOCATION> Aires</LOCATION> underground has caused traffic chaos and large queues at bus stops in the Argentine capital . 
+Train strike grips <LOCATION>Buenos Aires</LOCATION> A strike on the <LOCATION>Buenos Aires</LOCATION> underground has caused traffic chaos and large queues at bus stops in the Argentine capital . 
 Tube workers walked out last week demanding a 53 % pay rise and in protest against the installation of automatic ticket machines . 
 Metrovias , the private firm which runs the five tube lines in the city , has offered an 8 % increase in wages . 
 The firm promised no jobs would be lost as a result of new ticket machines . 
