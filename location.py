@@ -1,12 +1,13 @@
 import nltk
 from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import RandomForestClassifier
+from nltk.corpus import stopwords
 import pdb
 import re
 import os
 
 
-
+stop_words = set(stopwords.words("english"))
 def get_previous_word(word, line):
     index = line.index(word)
     if index == 0:
@@ -21,6 +22,15 @@ def get_location_in_line(word, line):
     return line.index(word)
 
 
+def get_word_location_in_line(word, line):
+    index = line.index(word)
+    if index == 0:
+        return 1
+
+    words_before = line[:index - 1].split(" ")
+    return len(words_before)
+
+
 def get_next_word(word, line):
     index = line.index(word) + len(word) + 1
     return line[index:].split(" ")[0]
@@ -33,24 +43,37 @@ def is_all_caps(word):
 def is_first_char_capitalised(word):
     words = word.split(" ")
     for w in words:
-        if w[0].islower() or (not re.match("^[a-zA-Z]*$", word)):
+        if w[0].islower() or (not re.match("^[a-zA-Z ]*$", word)):
             return 0
 
     return 1
+
+
+def is_in_bag_of_words(word):
+    bag = ["US", "UK", "China", "India", "Brazil"]
+    return 1 if word in bag else 0
 
 
 def is_first_word_word(word, line):
     return get_location_in_line(word, line) == 0
 
 
+# def previous_word_direction(word, word_context):
+#     prefixes = ('north', 'east', 'west', 'south', "central", "mid")
+#     previous_word = get_previous_word(word, word_context)
+#
+#     if not previous_word:
+#         return 0
+#
+#     return 1 if previous_word.lower().startswith(prefixes) else 0
+
+
 def previous_word_direction(word, word_context):
-    prefixes = ('north', 'east', 'west', 'south',)
-    previous_word = get_previous_word(word, word_context)
-
-    if not previous_word:
-        return 0
-
-    return 1 if previous_word.lower().startswith(prefixes) else 0
+    prefixes = ('north', 'east', 'west', 'south', "central", "mid")
+    for prefix in prefixes:
+        if prefix in word.lower():
+            return 1
+    return 0
 
 
 def has_keywords_before(word, word_context):
@@ -58,18 +81,22 @@ def has_keywords_before(word, word_context):
 
     previous_word = get_previous_word(word, word_context)
 
-    if not previous_word or previous_word == '':
+    if not previous_word:
         return 0
 
     if previous_word in keywords:
         return 1
+
+    previous_previous_word = get_previous_word(previous_word, word_context)
+    if previous_previous_word:
+        return 1 if previous_previous_word in keywords else 0
 
     return 0
 
 
 def has_keywords_after(word, word_context):
     keywords = ["'s", "based", "region", "square", "country", "city", "town", "county", "creek", "avenue", "court", "block", "street", "block", "drive",
-                "centre", "center", "ramp", "exit", "boulevard"]
+                "centre", "center", "ramp", "exit", "boulevard", "states", "kingdom"]
     next_word = get_next_word(word, word_context)
 
     if not next_word or next_word == '':
@@ -84,7 +111,7 @@ def has_keywords_after(word, word_context):
 def contains_suffix(word):
     if " " in word:
         return 0
-    suffixes = ('land', 'berg', 'burg', 'shire', 'cester')
+    suffixes = ('land', 'lands', 'berg', 'burg', 'shire', 'cester')
 
     # if word.endswith(suffixes):
     #     print "$"*100
@@ -114,6 +141,7 @@ def get_pos_class(word):
     tag = nltk.pos_tag([word])
     return pos_nominal_value_map.get(tag[0][1], 0)
 
+
 def is_noun(word):
     if len(word) <= 0: return 0
     tag = nltk.pos_tag([word])
@@ -123,7 +151,8 @@ def is_noun(word):
     #     print "$"*100
     #     print word
 
-    return 1 if tag[0][1] == 'NNP' else 0
+    return 1 if tag[0][1] == 'NNP' or tag[0][1] == 'NN' or tag[0][1] == 'NNS' else 0
+
 
 def is_location(word):
     result = re.search('^<LOCATION>(.*)</LOCATION>$', word)
@@ -140,21 +169,23 @@ def get_feature_vector(rows):
     feature_vector = [[0] for x in range(len(rows))]
 
     for i in range(len(rows)):
-        word, word_context = rows[i][0], rows[i][1]
+        word, word_context, nthword = rows[i][0], rows[i][1], rows[i][2]
         cur_vector = feature_vector[i]
 
         # cur_vector[0] = word
         # cur_vector[1] = word_context
         cur_vector[0] = is_first_char_capitalised(word)
-        cur_vector.append(is_first_char_capitalised(word))
+        # cur_vector.append(is_first_char_capitalised(word))
         cur_vector.append(has_keywords_before(word, word_context))
         cur_vector.append(has_keywords_after(word, word_context))
         cur_vector.append(is_noun(word))
         cur_vector.append(contains_suffix(word))
         cur_vector.append(previous_word_direction(word, word_context))
-        cur_vector.append(is_all_caps(word))
+        # cur_vector.append(is_all_caps(word))
         cur_vector.append(get_location_in_line(word, word_context))
-        cur_vector.append(is_first_word_word(word, word_context))
+        cur_vector.append(get_word_location_in_line(word, word_context))
+        cur_vector.append(nthword)
+        # cur_vector.append(is_first_word_word(word, word_context))
         next_word = get_next_word(word, word_context)
         if next_word:
             cur_vector.append(get_pos_class(next_word))
@@ -179,35 +210,51 @@ def get_feature_vector(rows):
             cur_vector.append(0)
             cur_vector.append(0)
 
-
+        # cur_vector.append(is_in_bag_of_words(word))
         # cur_vector.append(rows[i][2])
 
     return feature_vector
 
 
-def print_correct_labels(predicted, correct, data):
+def print_correct_labels(predicted, correct, data, rows):
     print "Correct Labels"
     count =0
+    c = []
     for i in range(len(predicted)):
         if correct[i] == predicted[i] and correct[i]==1:
-            print data[i][0]
+            print data[i][0] + "#######" + data[i][1] + "#####" + str(rows[i])
             count +=1
+    # print c
     print count
 
 
-def print_false_positive(predicted, correct, data):
+def print_false_positive(predicted, correct, data, rows):
     print "\n"
     print "False positive"
     for i in range(len(predicted)):
         if predicted[i] == 1 and correct[i] != 1:
-            print data[i][0]
+            print data[i][0] + "#######" + data[i][1]
 
-def print_true_negative(predicted, correct, data):
+
+def print_true_negative(predicted, correct, data, rows):
     print "\n"
     print "true negative"
+    print len(data)
+    print len(rows)
     for i in range(len(predicted)):
         if predicted[i] == 0 and correct[i] == 1:
-            print data[i][0] + "#######" + data[i][1]
+            print data[i][0] + "#######" + data[i][1] + "#####" + str(rows[i])
+
+
+def has_stop_words(word):
+    for stop_word in stop_words:
+        if stop_word in word:
+            return True
+    return False
+
+
+def is_stop_words(word):
+    return True if word in stop_words else False
 
 
 def trainiing(rows, labels, v_rows, v_labels, data):
@@ -231,9 +278,9 @@ def trainiing(rows, labels, v_rows, v_labels, data):
     correct=0
 
     print "Random forest"
-    print_correct_labels(predicted_labels, v_labels, data)
-    print_false_positive(predicted_labels, v_labels, data)
-    print_true_negative(predicted_labels, v_labels, data)
+    print_correct_labels(predicted_labels, v_labels, data, v_rows)
+    print_false_positive(predicted_labels, v_labels, data, v_rows)
+    print_true_negative(predicted_labels, v_labels, data, v_rows)
     print collections.Counter(predicted_labels)
 
     # pdb.set_trace()
@@ -248,11 +295,15 @@ def trainiing(rows, labels, v_rows, v_labels, data):
     mean_scores["decision-trees"] = scores.mean()
     predicted_labels = clf2.predict(v_rows)
     print "Decision Tree"
-    print_correct_labels(predicted_labels, v_labels, data)
-    print_false_positive(predicted_labels, v_labels, data)
-    print_true_negative(predicted_labels, v_labels, data)
+    print_correct_labels(predicted_labels, v_labels, data, v_rows)
+    print_false_positive(predicted_labels, v_labels, data, v_rows)
+    print_true_negative(predicted_labels, v_labels, data, v_rows)
     print collections.Counter(predicted_labels)
 
+    # import graphviz
+    # dot_data = tree.export_graphviz(clf2, out_file=None)
+    # graph = graphviz.Source(dot_data)
+    # graph.render("location")
     # print "-" * 100
     from sklearn import linear_model
     # clf3 = linear_model.LinearRegression()
@@ -266,19 +317,19 @@ def trainiing(rows, labels, v_rows, v_labels, data):
     # print_true_negative(predicted_labels, v_labels, data)
     # print collections.Counter(predicted_labels)
 
-    print "-" * 100
-    clf4 = linear_model.LogisticRegression()
-    clf4 = clf4.fit(rows, labels)
-    scores = cross_val_score(clf4, rows, labels)
-    mean_scores["logistic-regression"] = scores.mean()
-    predicted_labels = clf4.predict(v_rows)
-    print "Logistic Regression"
-    print_correct_labels(predicted_labels, v_labels, data)
-    print_false_positive(predicted_labels, v_labels, data)
-    print_true_negative(predicted_labels, v_labels, data)
-    print collections.Counter(predicted_labels)
-
-    print "-" * 100
+    # print "-" * 100
+    # clf4 = linear_model.LogisticRegression()
+    # clf4 = clf4.fit(rows, labels)
+    # scores = cross_val_score(clf4, rows, labels)
+    # mean_scores["logistic-regression"] = scores.mean()
+    # predicted_labels = clf4.predict(v_rows)
+    # print "Logistic Regression"
+    # print_correct_labels(predicted_labels, v_labels, data, v_rows)
+    # print_false_positive(predicted_labels, v_labels, data, v_rows)
+    # print_true_negative(predicted_labels, v_labels, data, v_rows)
+    # print collections.Counter(predicted_labels)
+    #
+    # print "-" * 100
 
     # from sklearn import svm
     # clf5 = svm.SVC()
@@ -298,7 +349,7 @@ def is_invalid(word):
     return word in invalid_list
 
 
-def get_row_and_label(word, line):
+def get_row_and_label(word, line, nthword, sentence):
     # processed_word = word
     label = 0
     if is_location(word):
@@ -307,7 +358,7 @@ def get_row_and_label(word, line):
         label = 1
     line = line.replace("</LOCATION>", "").replace("<LOCATION>", "")
     processed_word = process_word(word)
-    row = [processed_word, line, label]
+    row = [processed_word, line, nthword, sentence, label]
     return row, label
 
 
@@ -326,22 +377,37 @@ def get_rows_and_labels(files):
         lines = s.split("\n")
 
         for line in lines:
+            # line = line.replace(",", "").replace(".", "")
             words = line.split(" ")
             num_words = len(words)
             for i in range(num_words):
                 word = words[i]
+                if is_stop_words(word):
+                    continue
+                mod_line = ""
+                if i >= 2:
+                    mod_line += " " + words[i-2]
+                if i >=1:
+                    mod_line += " " + words[i - 1]
+
+                mod_line += " " + words[i]
+                if i < num_words-1:
+                    mod_line += " " + words[i+1]
+                if i < num_words-2:
+                    mod_line += " " + words[i+2]
+
                 if is_invalid(word):
                     continue
 
-                row, label = get_row_and_label(word, line)
+                row, label = get_row_and_label(word, mod_line, i, line)
                 rows.append(row)
                 labels.append(label)
 
-                if i < num_words:
+                if i < num_words-1:
                     next_word = words[i+1]
-                    if is_invalid(next_word):
+                    if is_invalid(next_word) or is_stop_words(next_word) or is_stop_words(word):
                         continue
-                    row, label = get_row_and_label(word + " " + next_word, line)
+                    row, label = get_row_and_label(word + " " + next_word, mod_line, i, line)
                     rows.append(row)
                     labels.append(label)
 
@@ -354,13 +420,14 @@ Millions of people were left homeless in Indonesia#L Aceh#L 's region following 
 def main():
     files = os.listdir("./mod/")
     # f = []
-    train_rows, train_labels = get_rows_and_labels(files[:85])
+    train_rows, train_labels = get_rows_and_labels(files[:-50])
 
 
     # for row in train_rows:
     #     print row[0] + "#######" + get_next_word(row[0], row[1]) + "############" + row[1]
 
-    validation_rows, validation_labels = get_rows_and_labels(files[85:97])
+    print "validation"
+    validation_rows, validation_labels = get_rows_and_labels(files[-50:])
     feature_vector = get_feature_vector(train_rows)
     # for vector in feature_vector:
     #     print vector
