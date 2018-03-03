@@ -17,6 +17,11 @@ def get_previous_word(word, line):
     return words_before[-1]
 
 
+def distance_from_mid(line, nthword):
+    words = line.split()
+    return abs(len(words)/2 - nthword)
+
+
 def get_location_in_line(word, line):
     words = line.split(" ")
     return line.index(word)
@@ -50,12 +55,24 @@ def is_first_char_capitalised(word):
 
 
 def is_in_bag_of_words(word):
-    bag = ["US", "UK", "China", "India", "Brazil"]
+    bag = ["US", "UK", "China", "India", "Brazil", "Russia"]
     return 1 if word in bag else 0
 
 
 def is_first_word_word(word, line):
     return get_location_in_line(word, line) == 0
+
+
+def unwanted_words(word):
+    for x in word:
+        if not x.isalpha() and not x.isspace():
+            return 0
+
+    negative = ["Sunday", "Saturday", "Monday", "Tuesday","Wednesday", "Thursday", "Friday", "January", "February",
+                "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",
+                "Airways"]
+
+    return 0 if word in negative else 1
 
 
 # def previous_word_direction(word, word_context):
@@ -111,7 +128,7 @@ def has_keywords_after(word, word_context):
 def contains_suffix(word):
     if " " in word:
         return 0
-    suffixes = ('land', 'lands', 'berg', 'burg', 'shire', 'cester')
+    suffixes = ('land', 'lands', 'berg', 'burg', 'shire', 'cester', 'States')
 
     # if word.endswith(suffixes):
     #     print "$"*100
@@ -134,7 +151,10 @@ def get_pos_class(word):
         'VBG': 4,
         'VBN': 4,
         'VBP': 4,
-        'VBZ': 4
+        'VBZ': 4,
+        'JJ': 5,
+        'JJR': 5,
+        'JJS': 5
     }
     if not word:
         return 0
@@ -152,6 +172,7 @@ def is_noun(word):
     #     print word
 
     return 1 if tag[0][1] == 'NNP' or tag[0][1] == 'NN' or tag[0][1] == 'NNS' else 0
+    # return 1 if tag[0][1] == 'NNP' or tag[0][1] == 'NN' else 0
 
 
 def is_location(word):
@@ -162,14 +183,108 @@ def is_location(word):
 def process_word(word):
     # result = re.search('<LOCATION>(.*)</LOCATION>', word)
     # return result.group(1)
-    return word.replace('<LOCATION>','').replace('</LOCATION>','')
+    return word.replace('<LOCATION>', '').replace('</LOCATION>','')
+
+
+def is_noun_new(word, line):
+    if len(word) <= 0: return 0
+    tag = nltk.pos_tag(line.split())
+    # return 1 if tag[0][1] == 'NNP' or tag[0][1] == 'NN' else 0
+
+    # if tag[0][1] == 'NNP':
+    #     print "$"*100
+    #     print word
+    for item in tag:
+        if item[0] == word:
+            if item[1] == 'NNP' or item[1] == 'NN' or item[1] == 'NNS':
+                return 1
+            else:
+                return 0
+    #return 1 if tag[0][1] == 'NNP' or tag[0][1] == 'NN' or tag[0][1] == 'NNS' else 0
+    #i=10/0
+    return 0
+
+
+def get_pos_class_new(word, line):
+    pos_nominal_value_map = {
+        ',': 1,
+        '.': 1,
+        'CC': 1,
+        'IN': 2,
+        'POS': 2,
+        'NN': 3,
+        'NNP': 3,
+        'NNS':3,
+        'VB': 4,
+        'VBD': 4,
+        'VBG': 4,
+        'VBN': 4,
+        'VBP': 4,
+        'VBZ': 4,
+        'JJ': 5,
+        'JJR': 5,
+        'JJS': 5
+    }
+    if not word:
+        return 0
+    tag = nltk.pos_tag(line.split())
+    for item in tag:
+        if item[0] == word:
+            return pos_nominal_value_map.get(item[1], 0)
+    #i=10/0
+    # return pos_nominal_value_map.get(tag[0][1], 0)
+    return 0
+
+
+def get_tags(line):
+    return nltk.pos_tag(line.split())
+
+
+def get_pos_from_tag(word, tag):
+    pos_nominal_value_map = {
+        ',': 1,
+        '.': 1,
+        'CC': 1,
+        'IN': 2,
+        'POS': 2,
+        'NN': 3,
+        'NNP': 3,
+        'NNS': 3,
+        'VB': 4,
+        'VBD': 4,
+        'VBG': 4,
+        'VBN': 4,
+        'VBP': 4,
+        'VBZ': 4,
+        'JJ': 5,
+        'JJR': 5,
+        'JJS': 5
+    }
+    for item in tag:
+        if item[0] == word:
+            return pos_nominal_value_map.get(item[1], 0)
+    return 0
+
+
+def is_noun_new_new(word, tag):
+    for item in tag:
+        if item[0] == word:
+            if item[1] == 'NNP' or item[1] == 'NN' or item[1] == 'NNS':
+                return 1
+    return 0
 
 
 def get_feature_vector(rows):
     feature_vector = [[0] for x in range(len(rows))]
 
+    previous_sentence = ""
+    previous_tags = None
     for i in range(len(rows)):
-        word, word_context, nthword = rows[i][0], rows[i][1], rows[i][2]
+        word, word_context, nthword, sentence = rows[i][0], rows[i][1], rows[i][2], rows[i][3]
+        if sentence == previous_sentence:
+            current_tags = previous_tags
+        else:
+            current_tags = get_tags(sentence)
         cur_vector = feature_vector[i]
 
         # cur_vector[0] = word
@@ -178,20 +293,23 @@ def get_feature_vector(rows):
         # cur_vector.append(is_first_char_capitalised(word))
         cur_vector.append(has_keywords_before(word, word_context))
         cur_vector.append(has_keywords_after(word, word_context))
-        cur_vector.append(is_noun(word))
+        cur_vector.append(is_noun_new_new(word, current_tags))
         cur_vector.append(contains_suffix(word))
         cur_vector.append(previous_word_direction(word, word_context))
         # cur_vector.append(is_all_caps(word))
         cur_vector.append(get_location_in_line(word, word_context))
         cur_vector.append(get_word_location_in_line(word, word_context))
+        # cur_vector.append(distance_from_mid(sentence, nthword))
         cur_vector.append(nthword)
+
         # cur_vector.append(is_first_word_word(word, word_context))
         next_word = get_next_word(word, word_context)
         if next_word:
-            cur_vector.append(get_pos_class(next_word))
+            # cur_vector.append(get_pos_from_tag(next_word, sentence))
+            cur_vector.append(get_pos_from_tag(next_word, current_tags))
             next_next_word = get_next_word(next_word, word_context)
             if next_next_word:
-                cur_vector.append(get_pos_class(next_next_word))
+                cur_vector.append(get_pos_from_tag(next_next_word, current_tags))
             else:
                 cur_vector.append(0)
         else:
@@ -200,19 +318,22 @@ def get_feature_vector(rows):
 
         previous_word = get_previous_word(word, word_context)
         if previous_word:
-            cur_vector.append(get_pos_class(previous_word))
+            cur_vector.append(get_pos_from_tag(previous_word, current_tags))
             previous_previous_word = get_previous_word(previous_word, word_context)
             if previous_previous_word:
-                cur_vector.append(get_pos_class(previous_previous_word))
+                cur_vector.append(get_pos_from_tag(previous_previous_word, current_tags))
             else:
                 cur_vector.append(0)
         else:
             cur_vector.append(0)
             cur_vector.append(0)
 
+        cur_vector.append(unwanted_words(word))
         # cur_vector.append(is_in_bag_of_words(word))
         # cur_vector.append(rows[i][2])
 
+        previous_sentence = sentence
+        previous_tags = current_tags
     return feature_vector
 
 
@@ -289,6 +410,7 @@ def trainiing(rows, labels, v_rows, v_labels, data):
     print "-" * 100
     
     from sklearn import tree
+    # clf2 = tree.DecisionTreeClassifier(criterion="entropy")
     clf2 = tree.DecisionTreeClassifier()
     clf2 = clf2.fit(rows, labels)
     scores = cross_val_score(clf2, rows, labels)
@@ -305,6 +427,7 @@ def trainiing(rows, labels, v_rows, v_labels, data):
     # graph = graphviz.Source(dot_data)
     # graph.render("location")
     # print "-" * 100
+
     from sklearn import linear_model
     # clf3 = linear_model.LinearRegression()
     # clf3 = clf3.fit(rows, labels)
@@ -382,8 +505,8 @@ def get_rows_and_labels(files):
             num_words = len(words)
             for i in range(num_words):
                 word = words[i]
-                if is_stop_words(word):
-                    continue
+                # if is_stop_words(word):
+                #     continue
                 mod_line = ""
                 if i >= 2:
                     mod_line += " " + words[i-2]
@@ -407,6 +530,7 @@ def get_rows_and_labels(files):
                     next_word = words[i+1]
                     if is_invalid(next_word) or is_stop_words(next_word) or is_stop_words(word):
                         continue
+                    # if is_noun(next_word) or is_noun(word):
                     row, label = get_row_and_label(word + " " + next_word, mod_line, i, line)
                     rows.append(row)
                     labels.append(label)
@@ -419,15 +543,18 @@ Millions of people were left homeless in Indonesia#L Aceh#L 's region following 
 """
 def main():
     files = os.listdir("./mod/")
+    train = files[:-50] #random_subset(files, 50)
+    test = files[-50:]#list(set(files) - set(test))
+
     # f = []
-    train_rows, train_labels = get_rows_and_labels(files[:-50])
+    train_rows, train_labels = get_rows_and_labels(train)
 
 
     # for row in train_rows:
     #     print row[0] + "#######" + get_next_word(row[0], row[1]) + "############" + row[1]
 
     print "validation"
-    validation_rows, validation_labels = get_rows_and_labels(files[-50:])
+    validation_rows, validation_labels = get_rows_and_labels(test)
     feature_vector = get_feature_vector(train_rows)
     # for vector in feature_vector:
     #     print vector
@@ -450,6 +577,22 @@ def main():
     # for v in feature_vector:
     #     print v
 
+
+import random
+def random_subset(iterator, K ):
+    result = []
+    N = 0
+
+    for item in iterator:
+        N += 1
+        if len( result ) < K:
+            result.append(item)
+        else:
+            s = int(random.random() * N)
+            if s < K:
+                result[s] = item
+
+    return result
 
 if __name__ == '__main__':
     main()
