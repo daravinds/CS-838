@@ -7,7 +7,7 @@ Named Entity Recognition (NER) of *Location* entities.
 - Krishnan Rajagopalan (krajagopalan@wisc.edu)
 - Palaniappan Nagarajan (pnagarajan3@wisc.edu)
 
-###Stage 1
+### Stage 1
 Please find the corresponding files in the links below.
 - [Dataset](https://github.com/daravinds/CS-838/tree/master/mod)
 - [Set I]()
