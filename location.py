@@ -23,7 +23,7 @@ stop_words = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you'
               "didn't", 'doesn', "doesn't", 'hadn', "hadn't", 'hasn', "hasn't", 'haven', "haven't", 'isn',
               "isn't", 'ma', 'mightn', "mightn't", 'mustn', "mustn't", 'needn', "needn't", 'shan', "shan't",
               'shouldn', "shouldn't", 'wasn', "wasn't", 'weren', "weren't", 'won', "won't", 'wouldn', "wouldn't",
-              "mr", "ms", "the"]
+              "mr", "ms", "the", "a", "an", "Mr", "Ms"]
 
 
 def get_previous_word(word, line):
@@ -89,7 +89,7 @@ def unwanted_words(word):
     negative = ["Sunday", "Saturday", "Monday", "Tuesday","Wednesday", "Thursday", "Friday", "January", "February",
                 "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",
                 "Airways", "Brazilian", "Russian", "British", "Indian", "German", "European", "Asian", "Chinese",
-                "American", "Japanese", "United", "French", "Chinese"]
+                "American", "Japanese", "United", "French", "Chinese", "Europeans", "American"]
 
     return 0 if word in negative else 1
 
@@ -105,7 +105,7 @@ def unwanted_words(word):
 
 
 def previous_word_direction(word, word_context):
-    prefixes = ('north', 'east', 'west', 'south', "central", "mid")
+    prefixes = ('north', 'east', 'west', 'south', "central", "mid", "latin")
     for prefix in prefixes:
         if prefix in word.lower():
             return 1
@@ -132,7 +132,7 @@ def has_keywords_before(word, word_context):
 
 def has_keywords_after(word, word_context):
     keywords = ["'s", "based", "region", "square", "country", "city", "town", "county", "creek", "avenue", "court", "block", "street", "block", "drive",
-                "centre", "center", "ramp", "exit", "boulevard", "states", "kingdom"]
+                "centre", "center", "ramp", "exit", "boulevard", "states", "kingdom", "-based", "based"]
     next_word = get_next_word(word, word_context)
 
     if not next_word or next_word == '':
@@ -147,7 +147,8 @@ def has_keywords_after(word, word_context):
 def contains_suffix(word):
     if " " in word:
         return 0
-    suffixes = ('land', 'lands', 'berg', 'burg', 'shire', 'cester', 'States', "ville")
+    suffixes = ('land', 'lands', 'berg', 'burg', 'shire', 'cester', 'States', "ville",
+                "ia", "na", "ica", "Island", "Islands", "Bay", "bay")
 
     # if word.endswith(suffixes):
     #     print "$"*100
@@ -372,13 +373,17 @@ def get_feature_vector(rows):
 def print_correct_labels(predicted, correct, data, rows):
     print "Correct Labels"
     count =0
+    pred=0
     c = []
     for i in range(len(predicted)):
         if correct[i] == predicted[i] and correct[i]==1:
-            print data[i][0] + "#######" + data[i][1] + "#####" + str(rows[i])
+            #print data[i][0] + "#######" + data[i][1] + "#####" + str(rows[i])
             count +=1
+        if predicted[i] == 1:
+            pred += 1
     # print c
     print count
+    print float(count)/pred
 
 
 def print_false_positive(predicted, correct, data, rows):
@@ -412,7 +417,7 @@ def is_stop_words(word):
 
 def trainiing(rows, labels, v_rows, v_labels, data):
     mean_scores = {}
-    clf1 = RandomForestClassifier()
+    clf1 = RandomForestClassifier(max_depth=15)
     # for row in rows:
     #     print row
     # for label in labels:
@@ -441,18 +446,18 @@ def trainiing(rows, labels, v_rows, v_labels, data):
 
     print "-" * 100
     
-    from sklearn import tree
-    # clf2 = tree.DecisionTreeClassifier(criterion="entropy")
-    clf2 = tree.DecisionTreeClassifier()
-    clf2 = clf2.fit(rows, labels)
-    scores = cross_val_score(clf2, rows, labels)
-    mean_scores["decision-trees"] = scores.mean()
-    predicted_labels = clf2.predict(v_rows)
-    print "Decision Tree"
-    print_correct_labels(predicted_labels, v_labels, data, v_rows)
-    print_false_positive(predicted_labels, v_labels, data, v_rows)
-    print_true_negative(predicted_labels, v_labels, data, v_rows)
-    print collections.Counter(predicted_labels)
+    # from sklearn import tree
+    # # clf2 = tree.DecisionTreeClassifier(criterion="entropy")
+    # clf2 = tree.DecisionTreeClassifier()
+    # clf2 = clf2.fit(rows, labels)
+    # scores = cross_val_score(clf2, rows, labels)
+    # mean_scores["decision-trees"] = scores.mean()
+    # predicted_labels = clf2.predict(v_rows)
+    # print "Decision Tree"
+    # print_correct_labels(predicted_labels, v_labels, data, v_rows)
+    # print_false_positive(predicted_labels, v_labels, data, v_rows)
+    # print_true_negative(predicted_labels, v_labels, data, v_rows)
+    # print collections.Counter(predicted_labels)
 
     # import graphviz
     # dot_data = tree.export_graphviz(clf2, out_file=None)
@@ -525,7 +530,7 @@ def get_rows_and_labels(files):
         if not fname.endswith(".txt"):
             continue
 
-        with open("./mod/" + fname) as f:
+        with open("./mod_clean/" + fname) as f:
             print fname
             s = f.read()
 
@@ -575,8 +580,8 @@ Millions of people were left homeless in Indonesia#L Aceh#L 's region following 
 """
 def main():
     files = os.listdir("./mod_clean/")
-    train = files[:-70] #random_subset(files, 50)
-    test = files[-70:]#list(set(files) - set(test))
+    train = files[:-100] #random_subset(files, 50)
+    test = files[-100:]#list(set(files) - set(test))
 
     # f = []
     train_rows, train_labels = get_rows_and_labels(train)
