@@ -7,7 +7,25 @@ import re
 import os
 
 
-stop_words = set(stopwords.words("english"))
+stop_words = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', "you're", "you've",
+              "you'll", "you'd", 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself',
+              'she', "she's", 'her', 'hers', 'herself', 'it', "it's", 'its', 'itself', 'they', 'them',
+              'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', "that'll",
+              'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has',
+              'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or',
+              'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against',
+              'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from',
+              'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once',
+              'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more',
+              'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too',
+              'very', 's', 't', 'can', 'will', 'just', 'don', "don't", 'should', "should've", 'now', 'd',
+              'll', 'm', 'o', 're', 've', 'y', 'ain', 'aren', "aren't", 'couldn', "couldn't", 'didn',
+              "didn't", 'doesn', "doesn't", 'hadn', "hadn't", 'hasn', "hasn't", 'haven', "haven't", 'isn',
+              "isn't", 'ma', 'mightn', "mightn't", 'mustn', "mustn't", 'needn', "needn't", 'shan', "shan't",
+              'shouldn', "shouldn't", 'wasn', "wasn't", 'weren', "weren't", 'won', "won't", 'wouldn', "wouldn't",
+              "mr", "ms", "the"]
+
+
 def get_previous_word(word, line):
     index = line.index(word)
     if index == 0:
@@ -70,7 +88,8 @@ def unwanted_words(word):
 
     negative = ["Sunday", "Saturday", "Monday", "Tuesday","Wednesday", "Thursday", "Friday", "January", "February",
                 "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",
-                "Airways"]
+                "Airways", "Brazilian", "Russian", "British", "Indian", "German", "European", "Asian", "Chinese",
+                "American", "Japanese", "United", "French", "Chinese"]
 
     return 0 if word in negative else 1
 
@@ -128,13 +147,23 @@ def has_keywords_after(word, word_context):
 def contains_suffix(word):
     if " " in word:
         return 0
-    suffixes = ('land', 'lands', 'berg', 'burg', 'shire', 'cester', 'States')
+    suffixes = ('land', 'lands', 'berg', 'burg', 'shire', 'cester', 'States', "ville")
 
     # if word.endswith(suffixes):
     #     print "$"*100
     #     print word
 
     return 1 if word.endswith(suffixes) else 0
+
+
+def contains_prefix(word):
+    prefixes = ('Mr', 'Ms',)
+
+    # if word.endswith(suffixes):
+    #     print "$"*100
+    #     print word
+
+    return 1 if word.startswith(prefixes) else 0
 
 
 def get_pos_class(word):
@@ -203,6 +232,7 @@ def is_noun_new(word, line):
     #return 1 if tag[0][1] == 'NNP' or tag[0][1] == 'NN' or tag[0][1] == 'NNS' else 0
     #i=10/0
     return 0
+
 
 
 def get_pos_class_new(word, line):
@@ -295,6 +325,7 @@ def get_feature_vector(rows):
         cur_vector.append(has_keywords_after(word, word_context))
         cur_vector.append(is_noun_new_new(word, current_tags))
         cur_vector.append(contains_suffix(word))
+        # cur_vector.append(contains_prefix(word))
         cur_vector.append(previous_word_direction(word, word_context))
         # cur_vector.append(is_all_caps(word))
         cur_vector.append(get_location_in_line(word, word_context))
@@ -329,6 +360,7 @@ def get_feature_vector(rows):
             cur_vector.append(0)
 
         cur_vector.append(unwanted_words(word))
+        cur_vector.append(has_stop_words(word))
         # cur_vector.append(is_in_bag_of_words(word))
         # cur_vector.append(rows[i][2])
 
@@ -528,7 +560,7 @@ def get_rows_and_labels(files):
 
                 if i < num_words-1:
                     next_word = words[i+1]
-                    if is_invalid(next_word) or is_stop_words(next_word) or is_stop_words(word):
+                    if is_invalid(next_word): # or is_stop_words(next_word.lower()) or is_stop_words(word.lower()):
                         continue
                     # if is_noun(next_word) or is_noun(word):
                     row, label = get_row_and_label(word + " " + next_word, mod_line, i, line)
@@ -542,9 +574,9 @@ def get_rows_and_labels(files):
 Millions of people were left homeless in Indonesia#L Aceh#L 's region following the earthquake and tsunami disaster in late December .
 """
 def main():
-    files = os.listdir("./mod/")
-    train = files[:-50] #random_subset(files, 50)
-    test = files[-50:]#list(set(files) - set(test))
+    files = os.listdir("./mod_clean/")
+    train = files[:-70] #random_subset(files, 50)
+    test = files[-70:]#list(set(files) - set(test))
 
     # f = []
     train_rows, train_labels = get_rows_and_labels(train)
