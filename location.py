@@ -418,16 +418,9 @@ def is_stop_words(word):
 
 def trainiing(rows, labels, v_rows, v_labels, data):
     from sklearn.metrics import precision_recall_fscore_support
-    mean_scores = {}
     clf1 = RandomForestClassifier(max_depth=15)
-    # for row in rows:
-    #     print row
-    # for label in labels:
-    #     print label
     clf1 = clf1.fit(rows, labels)
-    print "Number of labels"
-    print labels.count(1)
-    print v_labels.count(1)
+
 
     # precision = cross_val_score(clf1, rows, labels, cv=10, scoring="precision").mean()
     # recall = cross_val_score(clf1, rows, labels, cv=10, scoring="recall").mean()
@@ -438,22 +431,19 @@ def trainiing(rows, labels, v_rows, v_labels, data):
 
     predicted_labels = clf1.predict(v_rows)
     output = precision_recall_fscore_support(v_labels, predicted_labels, average=None)
-    print output
-    pdb.set_trace()
-    print "###"*100
-    import collections
-    print collections.Counter(v_labels)
-    correct=0
 
     print "Random forest"
-    print_correct_labels(predicted_labels, v_labels, data, v_rows)
-    print_false_positive(predicted_labels, v_labels, data, v_rows)
-    print_true_negative(predicted_labels, v_labels, data, v_rows)
-    print collections.Counter(predicted_labels)
+    print "-" * 100
+    print "Precision: " + str(output[0][1])
+    print "Recall: " + str(output[1][1])
+    print "F1 score: " + str(output[2][1])
+    # print_correct_labels(predicted_labels, v_labels, data, v_rows)
+    # print_false_positive(predicted_labels, v_labels, data, v_rows)
+    # print_true_negative(predicted_labels, v_labels, data, v_rows)
 
     # pdb.set_trace()
     print "-" * 100
-
+    """
     from sklearn import tree
     # clf2 = tree.DecisionTreeClassifier(criterion="entropy")
     clf2 = tree.DecisionTreeClassifier()
@@ -533,6 +523,7 @@ def trainiing(rows, labels, v_rows, v_labels, data):
     # print_false_positive(predicted_labels, v_labels, data)
     # print_true_negative(predicted_labels, v_labels, data)
     # print collections.Counter(predicted_labels)
+    """
 
 def is_invalid(word):
     invalid_list = [".", ",", ". ", "'", "", " "]
@@ -561,7 +552,6 @@ def get_rows_and_labels(files):
             continue
 
         with open("./mod_clean/" + fname) as f:
-            print fname
             s = f.read()
 
         lines = s.split("\n")
@@ -616,11 +606,6 @@ def main():
     # f = []
     train_rows, train_labels = get_rows_and_labels(train)
 
-
-    # for row in train_rows:
-    #     print row[0] + "#######" + get_next_word(row[0], row[1]) + "############" + row[1]
-
-    print "validation"
     validation_rows, validation_labels = get_rows_and_labels(test)
     feature_vector = get_feature_vector(train_rows)
     # for vector in feature_vector:
