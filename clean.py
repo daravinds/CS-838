@@ -10,6 +10,7 @@ for fname in files:
         print fname
         s = f.read()
 
+    lines = s.replace("`` ", '"')
     lines = s.replace("``", '"')
 
     with open("./mod_clean/" + fname, 'w') as the_file:

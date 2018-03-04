@@ -10,7 +10,7 @@ Spokesman Alan Jones said he expected 150,000 shoppers to have visited by the en
 " We 're very busy , it 's really strong and people will be shopping right up until Christmas . 
 " Over the Christmas period we 're expecting people to spend in excess of # 200m at the centre . '' 
 On Saturday afternoon , a spokeswoman for the St David's Shopping Centre in <LOCATION>Cardiff</LOCATION> said it looked like being its busiest day of the year with about 200,000 shoppers expected to have visited by the close of play . 
-At the St Enoch 's Shopping Centre in <LOCATION>Glasgow</LOCATION> , more than 140,000 shoppers - an all-time record - were expected to have passed through the doors by its closing time of 1900 GMT . 
+At the St <LOCATION>Enoch</LOCATION> 's Shopping Centre in <LOCATION>Glasgow</LOCATION> , more than 140,000 shoppers - an all-time record - were expected to have passed through the doors by its closing time of 1900 GMT . 
 Senior business manager Jon Walton said : " It has been phenomenal - absolutely mobbed . 
 " Every week footfall has been showing strong growth and at the weekends it has been going mad . '' 
 Regent Street Association director Annie Walker said on Saturday : " The stores were heaving today and a lot of people are going to be doing last minute shopping as many people finished work on Friday and can go in the week . '' 

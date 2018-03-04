@@ -1,4 +1,4 @@
-Asian quake hits European shares Shares in <LOCATION>Europe</LOCATION> 's leading reinsurers and travel firms have fallen as the scale of the damage wrought by tsunamis across <LOCATION>south Asia</LOCATION> has become apparent . 
+Asian quake hits European shares Shares in <LOCATION>Europe</LOCATION> 's leading reinsurers and travel firms have fallen as the scale of the damage wrought by tsunamis across <LOCATION>Asia</LOCATION> has become apparent . 
 More than 23,000 people have been killed following a massive underwater earthquake and many of the worst hit areas are popular tourist destinations . 
 Reisurance firms such as Swiss Re and Munich Re lost value as investors worried about rebuilding costs . 
 But the disaster has little impact on stock markets in the <LOCATION>US</LOCATION> and <LOCATION>Asia</LOCATION> . 
@@ -15,7 +15,7 @@ Worries about the size of insurance liabilities dragged European shares down , a
 Investors pointed out , however , that declines probably would be industry specific , with the travel and insurance firms hit hardest . 
 " It 's still too early for concrete damage figures , '' Swiss Re 's spokesman Floiran Woest told Associated Press . 
 " That also has to do with the fact that the damage is very widely spread geographically . '' 
-The unfolding scale of the disaster in <LOCATION>south Asia</LOCATION> had little immediate impact on <LOCATION>US</LOCATION> shares , however . 
+The unfolding scale of the disaster in <LOCATION>Asia</LOCATION> had little immediate impact on <LOCATION>US</LOCATION> shares , however . 
 The Dow Jones index had risen 20.54 points , or 0.2 % , to 10,847.66 by late morning as analsyts were cheered by more encouraging reports from retailers about post-Christmas sales . 
 In Asian markets , adjustments were made quickly to account for lower earnings and the cost of repairs . 
 Thai Airways shed almost 4 % . 

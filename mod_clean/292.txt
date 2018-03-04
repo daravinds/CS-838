@@ -1,4 +1,5 @@
-Steady job growth continues in <LOCATION>US</LOCATION> The <LOCATION>US</LOCATION> created fewer jobs than expected in December , but analysts said that the dip in hiring was not enough to derail the world 's biggest economy . 
+Steady job growth continues in <LOCATION>US</LOCATION> .
+The <LOCATION>US</LOCATION> created fewer jobs than expected in December , but analysts said that the dip in hiring was not enough to derail the world 's biggest economy . 
 According to Labor Department figures , 157,000 new jobs were added last month . 
 That took 2004 's total to 2.2 million , the best showing in five years . 
 Job creation was one of last year 's main concerns for the <LOCATION>US</LOCATION> economy . 

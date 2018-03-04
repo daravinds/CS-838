@@ -1,4 +1,5 @@
-Yukos unit fetches $ 9bn at auction A little-known Russian company has bought the main production unit of oil giant Yukos at auction in <LOCATION>Moscow</LOCATION> . 
+Yukos unit fetches $ 9bn at auction .
+A little-known Russian company has bought the main production unit of oil giant Yukos at auction in <LOCATION>Moscow</LOCATION> . 
 Baikal Finance Group outbid favourite Gazprom , the state-controlled gas monopoly , to buy Yuganskneftegas . 
 Baikal paid 260.75 bn roubles -LRB- $ 9.37 bn : # 4.8 bn -RRB- for Yugansk - nowhere near the $ 27bn <LOCATION>Russia</LOCATION> says Yukos owes in taxes . 
 Yukos reacted immediately by repeating its view that the auction was illegal in international and Russian law , and said Baikal had bought itself trouble . 

@@ -1,6 +1,7 @@
 import nltk
 from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import RandomForestClassifier
+from sklearn import linear_model
 from nltk.corpus import stopwords
 import pdb
 import re
@@ -407,8 +408,8 @@ def print_true_negative(predicted, correct, data, rows):
 def has_stop_words(word):
     for stop_word in stop_words:
         if stop_word in word:
-            return True
-    return False
+            return 1
+    return 0
 
 
 def is_stop_words(word):
@@ -416,6 +417,7 @@ def is_stop_words(word):
 
 
 def trainiing(rows, labels, v_rows, v_labels, data):
+    from sklearn.metrics import precision_recall_fscore_support
     mean_scores = {}
     clf1 = RandomForestClassifier(max_depth=15)
     # for row in rows:
@@ -423,13 +425,21 @@ def trainiing(rows, labels, v_rows, v_labels, data):
     # for label in labels:
     #     print label
     clf1 = clf1.fit(rows, labels)
-    scores = cross_val_score(clf1, rows, labels)
+    print "Number of labels"
+    print labels.count(1)
+    print v_labels.count(1)
+
+    # precision = cross_val_score(clf1, rows, labels, cv=10, scoring="precision").mean()
+    # recall = cross_val_score(clf1, rows, labels, cv=10, scoring="recall").mean()
+    # f1 = cross_val_score(clf1, rows, labels, cv=10, scoring="f1").mean()
+    # print "Precision: " + str(precision)
+    # print "Recall: " + str(recall)
+    # print "F1 score: " + str(f1)
+
     predicted_labels = clf1.predict(v_rows)
-
-    # print "#" * 100
-    # for predicted_label in predicted_labels:
-    #     print predicted_label
-
+    output = precision_recall_fscore_support(v_labels, predicted_labels, average=None)
+    print output
+    pdb.set_trace()
     print "###"*100
     import collections
     print collections.Counter(v_labels)
@@ -442,18 +452,22 @@ def trainiing(rows, labels, v_rows, v_labels, data):
     print collections.Counter(predicted_labels)
 
     # pdb.set_trace()
-    mean_scores["random-forest"] = scores.mean()
-
     print "-" * 100
-    
-    # from sklearn import tree
-    # # clf2 = tree.DecisionTreeClassifier(criterion="entropy")
-    # clf2 = tree.DecisionTreeClassifier()
-    # clf2 = clf2.fit(rows, labels)
-    # scores = cross_val_score(clf2, rows, labels)
-    # mean_scores["decision-trees"] = scores.mean()
-    # predicted_labels = clf2.predict(v_rows)
-    # print "Decision Tree"
+
+    from sklearn import tree
+    # clf2 = tree.DecisionTreeClassifier(criterion="entropy")
+    clf2 = tree.DecisionTreeClassifier()
+    clf2 = clf2.fit(rows, labels)
+    precision = cross_val_score(clf2, rows, labels, cv=10, scoring="precision").mean()
+    recall = cross_val_score(clf2, rows, labels, cv=10, scoring="recall").mean()
+    f1 = cross_val_score(clf2, rows, labels, cv=10, scoring="f1").mean()
+    # print "Precision: " + str(precision)
+    # print "Recall: " + str(recall)
+    # print "F1 score: " + str(f1)
+    predicted_labels = clf2.predict(v_rows)
+    output = precision_recall_fscore_support(v_labels, predicted_labels, average=None)
+    print output
+    print "Decision Tree"
     # print_correct_labels(predicted_labels, v_labels, data, v_rows)
     # print_false_positive(predicted_labels, v_labels, data, v_rows)
     # print_true_negative(predicted_labels, v_labels, data, v_rows)
@@ -463,46 +477,62 @@ def trainiing(rows, labels, v_rows, v_labels, data):
     # dot_data = tree.export_graphviz(clf2, out_file=None)
     # graph = graphviz.Source(dot_data)
     # graph.render("location")
-    # print "-" * 100
+    print "-" * 100
 
-    from sklearn import linear_model
+
+    # from sklearn import linear_model
+    #
     # clf3 = linear_model.LinearRegression()
     # clf3 = clf3.fit(rows, labels)
-    # scores = cross_val_score(clf3, rows, labels)
-    # mean_scores["linear-regression"] = scores.mean()
+    # precision = cross_val_score(clf3, rows, labels, cv=10, scoring="precision").mean()
+    # recall = cross_val_score(clf3, rows, labels, cv=10, scoring="recall").mean()
+    # f1 = cross_val_score(clf3, rows, labels, cv=10, scoring="f1").mean()
+    # print "Precision: " + str(precision)
+    # print "Recall: " + str(recall)
+    # print "F1 score: " + str(f1)
     # predicted_labels = clf3.predict(v_rows)
     # print "Linear model"
-    # print_correct_labels(predicted_labels, v_labels, data)
-    # print_false_positive(predicted_labels, v_labels, data)
-    # print_true_negative(predicted_labels, v_labels, data)
-    # print collections.Counter(predicted_labels)
+    # # print_correct_labels(predicted_labels, v_labels, data)
+    # # print_false_positive(predicted_labels, v_labels, data)
+    # # print_true_negative(predicted_labels, v_labels, data)
+    # # print collections.Counter(predicted_labels)
 
-    # print "-" * 100
-    # clf4 = linear_model.LogisticRegression()
-    # clf4 = clf4.fit(rows, labels)
-    # scores = cross_val_score(clf4, rows, labels)
-    # mean_scores["logistic-regression"] = scores.mean()
-    # predicted_labels = clf4.predict(v_rows)
-    # print "Logistic Regression"
+    print "-" * 100
+    clf4 = linear_model.LogisticRegression()
+    clf4 = clf4.fit(rows, labels)
+    precision = cross_val_score(clf4, rows, labels, cv=10, scoring="precision").mean()
+    recall = cross_val_score(clf4, rows, labels, cv=10, scoring="recall").mean()
+    f1 = cross_val_score(clf4, rows, labels, cv=10, scoring="f1").mean()
+    print "Precision: " + str(precision)
+    print "Recall: " + str(recall)
+    print "F1 score: " + str(f1)
+    predicted_labels = clf4.predict(v_rows)
+    output = precision_recall_fscore_support(v_labels, predicted_labels, average=None)
+    print output
+    print "Logistic Regression"
     # print_correct_labels(predicted_labels, v_labels, data, v_rows)
     # print_false_positive(predicted_labels, v_labels, data, v_rows)
     # print_true_negative(predicted_labels, v_labels, data, v_rows)
     # print collections.Counter(predicted_labels)
-    #
-    # print "-" * 100
+    print "-" * 100
 
-    # from sklearn import svm
-    # clf5 = svm.SVC()
-    # clf5 = clf5.fit(rows, labels)
-    # scores = cross_val_score(clf5, rows, labels)
-    # mean_scores["svm"] = scores.mean()
-    # predicted_labels = clf5.predict(v_rows)
-    # print "SVM"
+    from sklearn import svm
+    clf5 = svm.SVC()
+    clf5 = clf5.fit(rows, labels)
+    precision = cross_val_score(clf5, rows, labels, cv=10, scoring="precision").mean()
+    recall = cross_val_score(clf5, rows, labels, cv=10, scoring="recall").mean()
+    f1 = cross_val_score(clf5, rows, labels, cv=10, scoring="f1").mean()
+    print "Precision: " + str(precision)
+    print "Recall: " + str(recall)
+    print "F1 score: " + str(f1)
+    predicted_labels = clf5.predict(v_rows)
+    output = precision_recall_fscore_support(v_labels, predicted_labels, average=None)
+    print output
+    print "SVM"
     # print_correct_labels(predicted_labels, v_labels, data)
     # print_false_positive(predicted_labels, v_labels, data)
     # print_true_negative(predicted_labels, v_labels, data)
     # print collections.Counter(predicted_labels)
-
 
 def is_invalid(word):
     invalid_list = [".", ",", ". ", "'", "", " "]

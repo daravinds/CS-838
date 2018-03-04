@@ -1,4 +1,4 @@
-Chinese dam firm ` defies <LOCATION>Beijing</LOCATION> ' The China Three Gorges Project Corp is refusing to obey a government order to stop construction of one of its giant dams , the Chinese state press has said . 
+Chinese dam firm ` defies <LOCATION>Beijing</LOCATION> The China Three Gorges Project Corp is refusing to obey a government order to stop construction of one of its giant dams , the Chinese state press has said . 
 The builder of the Three Gorges Dam is continuing work on the sister <LOCATION>Xiluodu</LOCATION> dam , said the Beijing News . 
 The <LOCATION>Xiluodu</LOCATION> dam is one of 30 such large-scale construction projects called to a halt because of a lack of proper environmental checks . 
 The Beijing News said the company may instead choose to pay a fine . 
