@@ -2,6 +2,9 @@
 
 Named Entity Recognition (NER) of *Location* entities.
 
+To run, clone the project and run
+
+```python location.py```
 ### Team Members
 - Aravind Soundararajan (soundararaj2@wisc.edu)
 - Krishnan Rajagopalan (krajagopalan@wisc.edu)
