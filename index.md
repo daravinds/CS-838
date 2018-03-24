@@ -13,6 +13,6 @@ Please find the corresponding files in the links below.
 	- [README](https://github.com/daravinds/CS-838/blob/master/Stage1-NER/mod/README.md)
 - [Set I](https://github.com/daravinds/CS-838/tree/master/Stage1-NER/dev_set)
 - [Set J](https://github.com/daravinds/CS-838/tree/master/Stage1-NER/test_set)
-- [Source Code](https://github.com/daravinds/CS-838/master/Stage1-NER/)
+- [Source Code](https://github.com/daravinds/CS-838/tree/master/Stage1-NER/)
 - [Compressed File](https://github.com/daravinds/CS-838/blob/master/Stage1-NER/all_files.zip)
 - [Stage 1 Document](https://github.com/daravinds/CS-838/blob/master/Stage1-NER/Stage_1_Document.pdf)
