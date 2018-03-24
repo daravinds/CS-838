@@ -8,7 +8,7 @@ class GoodReadSpider(CrawlSpider):
   allowed_domains = ['goodreads.com']
 
   start_urls = []
-  for i in range(12, 48):
+  for i in range(1, 48):
     link = 'https://www.goodreads.com/list/show/12362.All_Time_Favorite_Romance_Novels?page=' + str(i)
     start_urls.append(link)
 
