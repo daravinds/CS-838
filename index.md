@@ -18,4 +18,4 @@
 - [Data](https://github.com/daravinds/CS-838/tree/master/Stage2-WebCrawling/data)
 	- [README](https://github.com/daravinds/CS-838/blob/master/Stage2-WebCrawling/data/README.md)
 - [Code](https://github.com/daravinds/CS-838/tree/master/Stage2-WebCrawling/code)
-- [Stage 2 Document](https://github.com/daravinds/CS-838/blob/master/Stage1-NER/Stage_1_Document.pdf)
+- [Stage 2 Document](https://github.com/daravinds/CS-838/blob/master/Stage2-WebCrawling/Stage_2_Document.pdf)
