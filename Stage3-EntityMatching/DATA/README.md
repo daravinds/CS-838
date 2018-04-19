@@ -1,0 +1,11 @@
+The following attributes have been considered while extracting information from our sources:
+- **Title:** This contains the title of the book (including the Edition number) as given in the source from which the book details are taken.
+- **Authors:** Gives the names of all the persons listed under the author’s section along with the authors. This includes the translator, the illustrator etc.
+- **Genres:** It is the category of books under which the book can be classified such as Horror, Comedy etc. A single book can be classified under multiple genres.
+- **Publishing Date:** The year under which the book was published by the publisher given in the source page.
+- **Pages**
+- **Publisher**
+- **Language**
+- **ISBN**: The unique identifier for each book. However, multiple editions of the same book may have the same ISBN.
+- **ISBN 13**
+- **URL:** The URL from which the book details were taken.
