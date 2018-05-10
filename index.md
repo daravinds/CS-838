@@ -36,6 +36,6 @@
 ### Stage 4: Integrating and performing analysis
 - [Data](https://github.com/daravinds/CS-838/blob/master/Stage4-IntegrationAndAnalysis)
 	- [Table E](https://github.com/daravinds/CS-838/blob/master/Stage4-IntegrationAndAnalysis/unified_table.csv)
-	- [Matches between Table A and Table B](https://github.com/daravinds/CS-838/blob/master/Stage4-IntegrationAndAnalysis/matches_between_A_and_B.csv)
+	- [Matches between Table A and Table B](https://github.com/daravinds/CS-838/blob/master/Stage4-IntegrationAndAnalysis/matches_A_B.csv)
 	- [Data Merging - Python Script](https://github.com/daravinds/CS-838/blob/master/Stage4-IntegrationAndAnalysis/generate_unified_table.ipynb)
 - [Stage 3 Document](https://github.com/daravinds/CS-838/blob/master/Stage4-IntegrationAndAnalysis)
