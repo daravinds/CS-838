@@ -32,3 +32,11 @@
 - [Code](https://github.com/daravinds/CS-838/tree/master/Stage3-EntityMatching/CODE)
 - [Stage 3 Document](https://github.com/daravinds/CS-838/blob/master/Stage3-EntityMatching/Stage_3_Document.pdf)
 - [Jupyter Notebook](https://github.com/daravinds/CS-838/blob/master/Stage3-EntityMatching/CODE/entity_matching.ipynb)
+
+### Stage 4: Integrating and performing analysis
+- [Data](https://github.com/daravinds/CS-838/blob/master/Stage4-IntegrationAndAnalysis)
+	- [Table E](https://github.com/daravinds/CS-838/blob/master/Stage4-IntegrationAndAnalysis)
+	- [Matches between Table A and Table B](https://github.com/daravinds/CS-838/blob/master/Stage4-IntegrationAndAnalysis)
+	- [Data Merging - Python Script](https://github.com/daravinds/CS-838/blob/master/Stage4-IntegrationAndAnalysis)
+- [Stage 3 Document](https://github.com/daravinds/CS-838/blob/master/Stage4-IntegrationAndAnalysis)
+- [Jupyter Notebook](https://github.com/daravinds/CS-838/blob/master/Stage4-IntegrationAndAnalysis)
